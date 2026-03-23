@@ -1,36 +1,5 @@
 # Cahier des Charges - CRM Suivi d'Affaires
 
-> **CONFIGURATION INITIALE REQUISE**
->
-> Ce document contient des placeholders `{{VARIABLE}}` et `A COMPLETER` a la place des informations personnelles.
-> Avant d'utiliser ce projet, lancez les scripts suivants pour configurer vos propres informations :
->
-> ```bash
-> # 1. Lancer le script de configuration (detecte automatiquement vos environnements Power Platform)
-> bash setup-env.sh
->
-> # 2. Appliquer les variables dans les documents
-> bash apply-env.sh
-> ```
->
-> **Variables a remplir** :
-> | Variable | Description |
-> |---|---|
-> | `{{NOM_AUTEUR}}` | Nom complet de l'auteur / responsable du projet |
-> | `{{NOM_ENTREPRISE}}` | Raison sociale de votre entreprise |
-> | `{{SIREN}}` | Numero SIREN (9 chiffres) |
-> | `{{EMAIL}}` | Email professionnel |
-> | `{{TELEPHONE}}` | Telephone professionnel |
-> | `{{ADRESSE}}` | Adresse complete de l'entreprise |
-> | `{{SITE_WEB}}` | URL du site web |
-> | `{{URL_LOGO}}` | URL du logo (pour les PDF) |
-> | `{{URL_DATAVERSE}}` | URL de votre org Dataverse (ex: monorg.crm12.dynamics.com) |
-> | `{{MSAL_CLIENT_ID}}` | ID de l'application Azure AD pour l'auth MSAL |
->
-> Le fichier `.env.project` genere par `setup-env.sh` est automatiquement ajoute au `.gitignore`.
-
----
-
 ## Power Apps Code App (React/TypeScript + Dataverse)
 
 **Version** : 1.0
@@ -1332,9 +1301,9 @@ create, update, delete, status_change, stage_change, email_sent, payment_added, 
 │                 Validite : 19/04/2026   │
 ├─────────────────────────────────────────┤
 │  EMETTEUR              DESTINATAIRE     │
-│  {{NOM_ENTREPRISE}}   Entreprise X     │
+│  {{NOM_ENTREPRISE}}      Entreprise X     │
 │  Adresse               Adresse          │
-│  SIREN {{SIREN}}       SIREN client     │
+│  SIREN {{SIREN}}         SIREN client     │
 │  Email / Tel           Contact / Email  │
 ├─────────────────────────────────────────┤
 │  Objet : [Titre de l'affaire]          │
@@ -1357,7 +1326,7 @@ create, update, delete, status_change, stage_change, email_sent, payment_added, 
 │  Date :         Signature :             │
 ├─────────────────────────────────────────┤
 │  Page 1/1                               │
-│  {{NOM_ENTREPRISE}} - SIREN ...    │
+│  {{NOM_ENTREPRISE}} - SIREN ...           │
 └─────────────────────────────────────────┘
 ```
 
@@ -1464,7 +1433,7 @@ Meme structure que le flow devis avec :
 │      │                                           │
 │      │                                           │
 ├──────┴───────────────────────────────────────────┤
-│  {{NOM_ENTREPRISE}} - v1.0                        │
+│  {{NOM_ENTREPRISE}} - v1.0                          │
 └──────────────────────────────────────────────────┘
 ```
 
@@ -2088,18 +2057,18 @@ Apres deploiement, inserer les parametres par defaut dans la table `cds_settings
 
 | Cle                      | Valeur                                                      |
 | ------------------------ | ----------------------------------------------------------- |
-| company_name             | A COMPLETER : nom de votre entreprise                       |
-| company_siren            | A COMPLETER : numero SIREN (9 chiffres)                     |
-| company_address          | A COMPLETER : adresse complete                              |
-| company_email            | A COMPLETER : email professionnel                           |
-| company_phone            | A COMPLETER : telephone                                     |
-| company_logo_url         | A COMPLETER : URL du logo                                   |
-| company_website          | A COMPLETER : URL du site web                               |
+| company_name             | {{NOM_ENTREPRISE}}                                            |
+| company_siren            | {{SIREN}}                                                     |
+| company_address          | {{ADRESSE}}                                                   |
+| company_email            | {{EMAIL}}                                                     |
+| company_phone            | {{TELEPHONE}}                                                 |
+| company_logo_url         | {{URL_LOGO}}                                                  |
+| company_website          | {{SITE_WEB}}                                                  |
 | vat_rate_default         | 20.00                                                       |
 | quote_validity_days      | 30                                                          |
 | payment_terms_days       | 30                                                          |
 | invoice_legal_mentions   | Micro-entreprise - TVA non applicable, art. 293 B du CGI... |
-| invoice_bank_details     | A COMPLETER : IBAN / BIC                                    |
+| invoice_bank_details     | {{IBAN}} / {{BIC}}                                              |
 | power_automate_email_url | (URL du flow HTTP trigger)                                  |
 
 ### Etape 6 : Creer la solution managee pour publication

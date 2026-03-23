@@ -1,13 +1,5 @@
 # MISSION COWORK : Creer le dossier .claude/ du projet CRM-Freelance
 
-> **CONFIGURATION INITIALE REQUISE**
->
-> Ce document contient des placeholders `{{VARIABLE}}` a la place des informations personnelles.
-> Lancez `bash setup-env.sh` puis `bash apply-env.sh` pour les remplir automatiquement.
-> Voir le CDC pour la liste complete des variables.
-
----
-
 > Tu es dans le repertoire racine du projet CRM-Freelance (Power Apps Code App).
 > Ta mission : creer le dossier `.claude/` complet avec TOUT ce qu'il faut
 > pour que Claude Code travaille comme une equipe de developpeurs seniors.
@@ -895,7 +887,7 @@ Format standard pour documenter une erreur :
   "hooks": {
     "PreToolUse": [
       {
-        "matcher": "Write",
+        "matcher": "Write|Edit",
         "hooks": [
           {
             "type": "command",
@@ -910,7 +902,7 @@ Format standard pour documenter une erreur :
         "hooks": [
           {
             "type": "command",
-            "command": "npx prettier --write \"$CLAUDE_FILE_PATH\" 2>/dev/null; exit 0"
+            "command": "FILE_PATH=$(cat | jq -r '.tool_input.file_path // .tool_input.path // empty' 2>/dev/null); [ -n \"$FILE_PATH\" ] && npx prettier --write \"$FILE_PATH\" 2>/dev/null; exit 0"
           }
         ]
       }
@@ -949,11 +941,12 @@ if [ $? -ne 0 ]; then
   ERRORS="$ERRORS\n\n=== ERREURS TYPESCRIPT ===\n$(echo "$TS_OUTPUT" | head -40)"
 fi
 
-# 2. Tests Vitest - tous doivent passer
+# 2. Tests Vitest - tous doivent passer (utilise le code retour, pas grep)
 if [ -f "vitest.config.ts" ] || [ -f "vitest.config.js" ]; then
   TEST_OUTPUT=$(npx vitest run --reporter=verbose 2>&1 | tail -40)
-  if echo "$TEST_OUTPUT" | grep -qE "FAIL|failed|Error"; then
-    ERRORS="$ERRORS\n\n=== TESTS EN ECHEC ===\n$TEST_OUTPUT"
+  TEST_EXIT=$?
+  if [ $TEST_EXIT -ne 0 ]; then
+    ERRORS="$ERRORS\n\n=== TESTS EN ECHEC (exit code $TEST_EXIT) ===\n$TEST_OUTPUT"
   fi
 fi
 
@@ -1004,7 +997,10 @@ if [ -n "$ERRORS" ]; then
   echo ""
   echo "Corrige TOUTES les erreurs ci-dessus avant de conclure."
   echo "Ne dis pas 'je vais corriger plus tard'. Corrige MAINTENANT."
+  exit 1
 fi
+
+exit 0
 ```
 
 ---
@@ -1015,7 +1011,7 @@ fi
 #!/bin/bash
 # ============================================================
 # BLOCK LAZY CODE - CRM Freelance (Power Apps Code App)
-# Intercepte chaque Write et bloque le vibe coding
+# Intercepte chaque Write ET Edit et bloque le vibe coding
 # Inclut les pieges specifiques Power Apps Code App
 # ============================================================
 
@@ -1566,15 +1562,29 @@ npx tsc --noEmit  # peut passer alors que vite build echoue
 
 Le fichier `power.config.json` a la racine contient les `databaseReferences` avec les noms exacts des tables et entitySetNames apres `pac code add-data-source`. TOUJOURS le consulter en cas de doute sur un nom de table.
 
+## Memoire projet
+
+Le fichier `.claude/memory.md` contient la memoire persistante du projet :
+- Decisions d'architecture prises et justifiees
+- Erreurs rencontrees et corrigees (pour ne jamais les repeter)
+- Pieges SDK decouverts au-dela des 13 documentes
+- Patterns qui fonctionnent (a reutiliser)
+- Etat d'avancement module par module
+- Etat du deploiement Dataverse
+- Notes de session chronologiques
+
+**REGLE : Au debut de chaque session, lire `.claude/memory.md`. A chaque erreur corrigee ou decision prise, mettre a jour `.claude/memory.md`.**
+
 ## En cas de doute ou d'echec
 
 1. STOPPER toute improvisation
-2. Consulter la doc officielle Microsoft :
+2. Consulter `.claude/memory.md` pour verifier si l'erreur est deja documentee
+3. Consulter la doc officielle Microsoft :
    - Code Apps : https://learn.microsoft.com/en-us/power-apps/developer/code-apps/
    - Dataverse : https://learn.microsoft.com/en-us/power-apps/developer/code-apps/how-to/connect-to-dataverse
    - Web API : https://learn.microsoft.com/en-us/power-apps/developer/data-platform/webapi/
-3. Appliquer la solution documentee
-4. Documenter l'erreur dans CDC section 9.1 + COWORK section A8
+4. Appliquer la solution documentee
+5. Documenter l'erreur dans `.claude/memory.md` + CDC section 9.1
 
 ## Interdits absolus
 
@@ -1592,7 +1602,93 @@ Le fichier `power.config.json` a la racine contient les `databaseReferences` ave
 
 ---
 
-## FICHIER 10 (ajout) : Section A11 - Enum Mappings complet (Choice fields)
+## FICHIER 10 : .claude/memory.md
+
+> Ce fichier est la MEMOIRE PERSISTANTE du projet CRM-Freelance.
+> Claude Code DOIT le lire au debut de chaque session ET le mettre a jour
+> a chaque erreur corrigee, piege decouvert, ou decision d'architecture prise.
+
+```markdown
+# CRM-Freelance - Memoire Projet
+
+> Derniere MAJ : [date auto par Claude Code]
+> Ce fichier est lu et mis a jour automatiquement par Claude Code.
+> Il persiste les apprentissages entre sessions pour eviter de repeter les erreurs.
+
+## Decisions d'architecture prises
+
+| Date | Decision | Raison | Impact |
+|------|----------|--------|--------|
+| _init_ | Dataverse (pas SharePoint) | Relations, types, scalabilite | Toute la couche data |
+| _init_ | Pattern Mock + Prod + Proxy par service | Dev local sans SDK Power Apps | Chaque service |
+| _init_ | Colonnes denormalisees (cds_account_name) | SDK ne supporte pas $expand facilement | Tables contacts, deals, quotes, orders, invoices |
+| _init_ | Choice = entiers Dataverse, mapper dans enum-mappings.ts | Contrainte Dataverse | Tous les picklists |
+| _init_ | jsPDF cote client (pas serveur) | Pas de backend dans Code App | Generation PDF factures/devis |
+| _init_ | Proxy NON sticky (retry prod a chaque appel) | Eviter basculement definitif sur mock | service-proxy.ts |
+
+## Erreurs rencontrees et corrigees
+
+| Date | Erreur | Cause racine | Solution appliquee | Fichier(s) impacte(s) |
+|------|--------|-------------|--------------------|-----------------------|
+| _a remplir au fur et a mesure_ | | | | |
+
+## Pieges SDK decouverts (au-dela des 13 documentes)
+
+| # | Piege | Decouvert le | Context |
+|---|-------|-------------|---------|
+| _a remplir au fur et a mesure_ | | | |
+
+## Patterns qui fonctionnent (a reutiliser)
+
+| Pattern | Fichier reference | Description |
+|---------|-------------------|-------------|
+| createServiceProxy<T> | src/lib/services/shared/service-proxy.ts | Proxy generique non-sticky avec fallback mock |
+| enum-mappings toInt/toStr | src/lib/services/shared/enum-mappings.ts | Conversion bidirectionnelle Choice Dataverse |
+| Import SDK lazy | production-service.ts (chaque service) | await import('@microsoft/power-apps/data') avec @ts-expect-error |
+| Zod + react-hook-form | Formulaires | standardSchemaResolver (pas zodResolver pour Zod v4) |
+
+## Etat d'avancement des modules
+
+| Module | Statut | Mock | Prod | Tests | UI | Notes |
+|--------|--------|------|------|-------|----|-------|
+| Comptes | _a faire_ | | | | | |
+| Contacts | _a faire_ | | | | | |
+| Affaires (Deals) | _a faire_ | | | | | |
+| Devis + lignes | _a faire_ | | | | | |
+| Commandes + lignes | _a faire_ | | | | | |
+| Factures + lignes | _a faire_ | | | | | |
+| Paiements | _a faire_ | | | | | |
+| Activites | _a faire_ | | | | | |
+| Taches | _a faire_ | | | | | |
+| Dashboard | _a faire_ | | | | | |
+| Numerotation | _a faire_ | | | | | |
+| Settings | _a faire_ | | | | | |
+| Email templates | _a faire_ | | | | | |
+| Workflows | _a faire_ | | | | | |
+| Goals/Achievements | _a faire_ | | | | | |
+| Audit | _a faire_ | | | | | |
+
+## Deploiement Dataverse
+
+| Etape | Statut | Date | Notes |
+|-------|--------|------|-------|
+| Tables creees | _a faire_ | | |
+| pac code init | _a faire_ | | |
+| add-data-source (21 tables) | _a faire_ | | |
+| ProductionService branches | _a faire_ | | |
+| Premier pac code push | _a faire_ | | |
+| Donnees cds_settings | _a faire_ | | |
+
+## Notes de session (log chronologique)
+
+_Ajouter ici un resume de chaque session de travail importante :_
+
+- **[date]** : Session initiale - setup .claude/, creation structure projet
+```
+
+---
+
+## FICHIER 11 (ajout) : Section A11 - Enum Mappings complet (Choice fields)
 
 > Ajouter dans la PARTIE A du document, apres A10.
 
@@ -1921,6 +2017,7 @@ ETAPE 6 : Solution managee (optionnel, pour distribution)
 ```
 .claude/
 ├── settings.json
+├── memory.md              ← NOUVEAU : memoire projet persistante
 ├── agents/
 │   ├── enforcer.md
 │   ├── no-shortcut-dev.md
@@ -1950,5 +2047,5 @@ cat CLAUDE.md | head -5
 
 # Ajouter au git
 git add .claude/ CLAUDE.md
-git commit -m "chore: setup .claude/ anti-vibe-coding + CLAUDE.md + Power Apps Code App knowledge"
+git commit -m "chore: setup .claude/ anti-vibe-coding + CLAUDE.md + memory + Power Apps Code App knowledge"
 ```
