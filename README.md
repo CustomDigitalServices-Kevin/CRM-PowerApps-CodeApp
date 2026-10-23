@@ -235,3 +235,8 @@ Ce projet est un template open-source. Utilisez-le librement pour creer votre pr
 - [Documentation officielle Code Apps](https://learn.microsoft.com/en-us/power-apps/developer/code-apps/)
 - [Connexion Dataverse](https://learn.microsoft.com/en-us/power-apps/developer/code-apps/how-to/connect-to-dataverse)
 - [PAC CLI Reference](https://learn.microsoft.com/en-us/power-platform/developer/cli/reference/code)
+
+## À propos
+
+Conçu et maintenu par [Kevin Tomas](https://www.custom-digital-services.com/?utm_source=github&utm_medium=readme&utm_campaign=crm-powerapps-codeapp), consultant freelance Power Platform et IA Microsoft (Custom Digital Services).
+Projets Power Apps Code Apps : [www.custom-digital-services.com/expertises/architecture-power-platform](https://www.custom-digital-services.com/expertises/architecture-power-platform/?utm_source=github&utm_medium=readme&utm_campaign=crm-powerapps-codeapp). Autres outils gratuits : [www.custom-digital-services.com/outils](https://www.custom-digital-services.com/outils/?utm_source=github&utm_medium=readme&utm_campaign=crm-powerapps-codeapp)
