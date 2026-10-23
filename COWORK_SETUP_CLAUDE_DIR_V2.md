@@ -121,14 +121,14 @@ const result = await CdsAccountsService.getAll({
 
 // Creation
 const newAccount = {
-  cds_name: "RATP",
-  cds_siren: "775663438",
+  cds_name: "Acme",
+  cds_siren: "000000018",
   cds_sector: 775930000, // Choice = entier en Dataverse
 };
 await CdsAccountsService.create(newAccount);
 
 // Mise a jour
-await CdsAccountsService.update(accountId, { cds_name: "RATP Group" });
+await CdsAccountsService.update(accountId, { cds_name: "Acme Group" });
 
 // Suppression
 await CdsAccountsService.delete(accountId);
@@ -382,8 +382,8 @@ interface AccountService {
 // 2. MockService (donnees realistes en memoire, 200ms delay)
 class MockAccountService implements AccountService {
   private accounts: Account[] = [
-    { id: '1', name: 'RATP', siren: '775663438', sector: 'BTP', ... },
-    { id: '2', name: 'Sanofi', siren: '395030844', sector: 'Pharma', ... },
+    { id: '1', name: 'Acme', siren: '000000018', sector: 'BTP', ... },
+    { id: '2', name: 'Globex', siren: '000000026', sector: 'Pharma', ... },
   ];
 
   async getAll(): Promise<Account[]> {
@@ -1199,7 +1199,7 @@ Avant de coder quoi que ce soit, lis :
 ### 4. SERVICE COMPLET
 
 - Interface TypeScript du service
-- MockService avec donnees REALISTES (RATP, Sanofi, pas "test"/"foo")
+- MockService avec donnees REALISTES (Acme, Globex, pas "test"/"foo")
 - ProductionService avec import SDK dynamique lazy
 - Proxy intelligent (prod en prod, mock en dev, fallback auto)
 - Mapping Dataverse (noms logiques cds\_\*) <-> TypeScript (camelCase)
@@ -1460,7 +1460,7 @@ src/lib/services/
 ├── account/
 │ ├── index.ts # createServiceProxy<IAccountService>(mock, prod)
 │ ├── types.ts # Interface IAccountService
-│ ├── mock-service.ts # Donnees realistes (RATP, Sanofi, pas "test")
+│ ├── mock-service.ts # Donnees realistes (Acme, Globex, pas "test")
 │ ├── production-service.ts # Utilise Cds_accountsService genere
 │ └── enum-mappings.ts # Choice entier <-> string
 
