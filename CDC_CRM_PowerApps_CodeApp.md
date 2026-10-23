@@ -1464,9 +1464,9 @@ Meme structure que le flow devis avec :
 │  ██ Negociation      │                               │
 ├──────────────────────┼──────────────────────────────┤
 │  Top 5 affaires      │  Taches urgentes              │
-│  1. RATP - 35k€      │  ☐ Relancer devis Sanofi (H) │
-│  2. Sanofi - 22k€    │  ☐ Envoyer facture GSK (M)   │
-│  3. GSK - 18k€       │  ☐ Preparer demo RATP (H)    │
+│  1. Acme - 35k€      │  ☐ Relancer devis Globex (H) │
+│  2. Globex - 22k€    │  ☐ Envoyer facture Duff (M)  │
+│  3. Duff - 18k€      │  ☐ Preparer demo Acme (H)    │
 │  ...                 │  ...                          │
 ├──────────────────────┴──────────────────────────────┤
 │  ⚠ Alertes                                          │
@@ -1485,13 +1485,13 @@ Meme structure que le flow devis avec :
 │ PROSPECT  │ QUALIF.   │ PROPOSIT. │ NEGOCIAT. │ GAGNE     │PERDU│
 │  (45k€)   │  (22k€)   │  (35k€)   │  (18k€)   │  (65k€)   │     │
 │┌─────────┐│┌─────────┐│┌─────────┐│┌─────────┐│┌─────────┐│     │
-││ RATP    │││ Sanofi  │││ GSK     │││ Vinci   │││ RATP    ││     │
+││ Acme    │││ Globex  │││ Duff    │││ Hooli   │││ Acme    ││     │
 ││ 35k€    │││ 12k€    │││ 20k€    │││ 18k€    │││ 35k€    ││     │
 ││ 10%     │││ 25%     │││ 50%     │││ 75%     │││ 100%    ││     │
 ││ [Malt]  │││[Linked] │││[Recom.] │││[Linked] │││[Malt]   ││     │
 │└─────────┘│└─────────┘│└─────────┘│└─────────┘│└─────────┘│     │
 │┌─────────┐│           │┌─────────┐│           │           │     │
-││ GSK     ││           ││ Sanofi  ││           │           │     │
+││ Duff    ││           ││ Globex  ││           │           │     │
 ││ 10k€    ││           ││ 15k€    ││           │           │     │
 │└─────────┘│           │└─────────┘│           │           │     │
 └───────────┴───────────┴───────────┴───────────┴───────────┴─────┘
@@ -1503,7 +1503,7 @@ Meme structure que le flow devis avec :
 ┌─────────────────────────────────────────────────────┐
 │  Devis DEV-2026-003    Statut : [Brouillon ▼]      │
 │                                                      │
-│  Affaire : [RATP - Mission Power BI ▼]              │
+│  Affaire : [Acme - Mission Power BI ▼]              │
 │  Contact : [Jean Dupont ▼]                          │
 │  Date emission : [20/03/2026]  Validite : [30 jours]│
 ├─────────────────────────────────────────────────────┤
@@ -1533,7 +1533,7 @@ Meme structure que le flow devis avec :
 ┌─────────────────────────────────────────────────────┐
 │  Facture FAC-2026-002   Statut : [Emise]            │
 │  Commande : CMD-2026-002                            │
-│  Entreprise : Sanofi    Contact : Marie Martin      │
+│  Entreprise : Globex    Contact : Marie Martin      │
 │  Emise le : 15/03/2026  Echeance : 14/04/2026      │
 ├─────────────────────────────────────────────────────┤
 │  [Lignes de facture - tableau identique au devis]   │
@@ -1559,7 +1559,7 @@ Meme structure que le flow devis avec :
 
 ```
 ┌─────────────────────────────────────────────────────┐
-│  [Logo]  RATP                    Score : ★★★★☆ 85   │
+│  [Logo]  Acme                    Score : ★★★★☆ 85   │
 │  Secteur : Transport  Taille : GE                    │
 │  [Modifier]  [+ Activite]  [+ Affaire]              │
 ├──────────────────────┬──────────────────────────────┤
